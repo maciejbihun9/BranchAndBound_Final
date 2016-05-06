@@ -1,3 +1,5 @@
+package implementations;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,19 @@ public class Limits {
         return limitsList;
     }
 
+    public static void removeAllConstraints(){
+        for (int i = 0 ;i < variablesWithConstraints.size(); i++){
+            variablesWithConstraints.remove(i);
+        }
+    }
+
+    /**
+     *
+     * @param variableIndex Add constraint to a variable index.
+     *                      That index cannot be used for next branches
+     */
     public static void addConstraintToVariable(int variableIndex){
+        if(!variablesWithConstraints.contains(variableIndex))
         variablesWithConstraints.add(variableIndex);
     }
 

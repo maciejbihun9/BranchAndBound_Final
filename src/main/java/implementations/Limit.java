@@ -1,3 +1,5 @@
+package implementations;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,8 +28,13 @@ public class Limit {
         return result;
     }
 
-    //Find on which position is placed the first lowest parameter
-    //Ofcorse parameter 0 is not considered.
+    //
+
+    /**
+     * Find on which position is placed the first lowest parameter.
+     * Of corse parameter 0 is not considered.
+     * @return index of parameter with the lowest value.
+     */
     public int getMinParamIndex(){
         int index = 0;
         int minValue = params[0];

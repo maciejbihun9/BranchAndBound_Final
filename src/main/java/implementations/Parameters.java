@@ -1,10 +1,14 @@
+package implementations;
+
+import java.util.List;
+
 /**
  * Created by MaciekBihun on 2016-05-02.
  */
 public class Parameters {
 
     private static final Parameters parameters = new Parameters();
-    private static int [] functionParameters;
+    private static List <Integer> functionParameters;
     private Parameters(){
 
     }
@@ -13,11 +17,15 @@ public class Parameters {
         return parameters;
     }
 
-    public static void setFunctionParameters(int [] params){
+    public static void setFunctionParameters(List<Integer> params){
         functionParameters = params;
     }
 
-    public static int [] getFunctionParameters(){
+    /**
+     *
+     * @return Array with function parameters.
+     */
+    public List<Integer> getFunctionParameters(){
         return functionParameters;
     }
 }
