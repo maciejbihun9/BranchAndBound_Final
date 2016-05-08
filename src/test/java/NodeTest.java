@@ -53,6 +53,8 @@ public class NodeTest {
 
     }
 
+
+
     @Test
     public void paramWithMinValueIndex(){
         if(node.getNotIntegerVariableIndexes().isEmpty())

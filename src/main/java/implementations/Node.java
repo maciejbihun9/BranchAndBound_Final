@@ -45,6 +45,14 @@ public class Node {
 
     /**
      *
+     * @return Node variables array.
+     */
+    public double [] getNodeVariables(){
+        return nodeVariables;
+    }
+
+    /**
+     *
      * @return variables array with new floored variable.
      */
     public double [] getVariablesForLowerNode(){
@@ -103,19 +111,24 @@ public class Node {
     public int getIndexOfVariableWithMinParam(){
         if(getNotIntegerVariableIndexes().isEmpty())
             return -1;
-        //Check which index has minimum value.
-        List<Integer> notIntegerVariableIndexes = getNotIntegerVariableIndexes();
-        List<Integer> functionParametersList = Parameters.getInstance().getFunctionParameters();
-        //set the minimum value at first list element.
+        else if(getNotIntegerVariableIndexes().size() == 1)
+            return getNotIntegerVariableIndexes().get(0);
+        else{
+            //Check which index has minimum value.
+            List<Integer> notIntegerVariableIndexes = getNotIntegerVariableIndexes();
+            List<Integer> functionParametersList = Parameters.getInstance().getFunctionParameters();
+            //set the minimum value at first list element.
 
-        int minValue = Parameters.getInstance().getFunctionParameters().get(notIntegerVariableIndexes.get(0));
-        int minValueIndex = notIntegerVariableIndexes.get(0);
-        for (int i = 1 ;i < notIntegerVariableIndexes.size(); i++){
-            if(functionParametersList.get(notIntegerVariableIndexes.get(i)) < minValue) {
-                minValueIndex = notIntegerVariableIndexes.get(i);
+            int minValue = Parameters.getInstance().getFunctionParameters().get(notIntegerVariableIndexes.get(0));
+            int minValueIndex = notIntegerVariableIndexes.get(0);
+            for (int i = 1 ;i < notIntegerVariableIndexes.size(); i++){
+                if(functionParametersList.get(notIntegerVariableIndexes.get(i)) < minValue) {
+                    minValueIndex = notIntegerVariableIndexes.get(i);
+                }
             }
+            return minValueIndex;
         }
-        return minValueIndex;
+
     }
 
     public void setConstraintOnVariableWithMinParam(){
@@ -124,51 +137,94 @@ public class Node {
         Limits.addConstraintToVariable(minParamIndex);
     }
 
-
-    public double [] checkLimits() {
-
-        List<Integer> listaInt = new ArrayList<Integer>();
-        List<Integer> paramsWithoutConstraintList = new ArrayList<>();
-        List<Limit> limits = Limits.getInstance().getLimitsList();
-        for (int i = 0; i < limits.size(); i++){
-            //If nodeVariables does not fulfil limit equation.
-            if(!limits.get(i).checkIfFulfilEquation(nodeVariables)){
-
-                //remove from limit parameters indexes with constraints.
-                List<Integer> constraintIndexes = Limits.getVariablesWithConstraints();//{1, 3}
-                //int [] parametersWithoutConstraint = new int [limits.get(i).getLimitParameters().length - constraintIndexes.size()];
-                for(int k = 0; k < limits.get(i).getLimitParameters().length; k++){
-                    paramsWithoutConstraintList.add(limits.get(i).getLimitParameters()[k]);
-                }
-
-
-                for(int j = 0; j < constraintIndexes.size(); j++){
-                    int index = constraintIndexes.get(j);
-                    paramsWithoutConstraintList.remove(index);
-                }
-
-                listaInt = new ArrayList<Integer>();
-                for(int k = 0 ; k < limits.get(i).getLimitParameters().length; k++){
-                    if(!constraintIndexes.contains(k));
-                    listaInt.add(k);
-                }
-
-                // pobierz zmienną z min parametrem ograniczenia
-                paramsWithoutConstraintList.stream().min(new CompareInt()).get();
-
-
-                //Dopasuj tą zmienną, aby pasowała
-            }
+    /**
+     *
+     * @return List with not constrained variables indexes.
+     */
+    public List<Integer> getNotConstrainedIndexes(){
+        List<Integer> constrainedIndexes = Limits.getVariablesWithConstraints();
+        List<Integer> functionIndexes = new ArrayList<Integer>();
+        for (int i = 0; i < nodeVariables.length; i++) {
+            functionIndexes.add(i);
         }
-
-        return nodeVariables;
+        //List<Integer> notIntegerIndexes = getNotIntegerVariableIndexes();
+        for(int i = 0 ; i < constrainedIndexes.size(); i++){
+            functionIndexes.remove(constrainedIndexes.get(i));
+        }
+        return functionIndexes;
     }
 
-    //Dopasuj zmienne,a by spełniały limity i uaktualnij bieżące zmienne.
-    /*public double [] adjustedVariables(){
-        nodeVariables = getVariablesForHigherNode();
-        return nodeVariables;
-    }*/
+    /**
+     *
+     * @param whichLimit
+     * @return index with the lowest parameter value in specified limit.
+     */
+    public int getIndexFromNotConstrainedVariablesWithMinParam(int whichLimit){
+        if(getNotConstrainedIndexes().isEmpty())
+            return -1;
+        else if(getNotConstrainedIndexes().size() == 1)
+            return getNotConstrainedIndexes().get(0);
+        else{
+            //Check which index has minimum value.
+            List<Integer> notConstrainedIndexes = getNotConstrainedIndexes();
+            Limit limit = Limits.getInstance().getLimitsList().get(whichLimit);
+            //set the minimum value at first list element.
+
+            //set first element from not constrained indexes.
+            for(int i = 0 ; i < limit.getLimitParameters().length; i++){
+                if(limit.getLimitParameters()[i] == 0){
+                    Integer indeks = i;
+                    notConstrainedIndexes.remove(indeks);
+                }
+            }
+
+            //If each limit parameter has value zero then return -1;
+            if(notConstrainedIndexes.isEmpty())
+                return -1;
+
+            int minValue = limit.getLimitParameters()[notConstrainedIndexes.get(0)];
+            int minValueIndex = notConstrainedIndexes.get(0);
+            for (int i = 1 ;i < notConstrainedIndexes.size(); i++){
+                if(limit.getLimitParameters()[notConstrainedIndexes.get(i)] < minValue &&
+                        limit.getLimitParameters()[notConstrainedIndexes.get(i)] != 0) {
+                    minValueIndex = notConstrainedIndexes.get(i);
+                }
+            }
+
+            return minValueIndex;
+        }
+
+    }
+
+
+    /**
+     * If equation does not fulfil limits then adjust apprioprate variable
+     * to match each limit equation.
+     */
+    public void checkLimits2(){
+        //Get not integer variables
+
+        List<Limit> limitsList = Limits.getInstance().getLimitsList();
+        for (int i = 0 ; i < limitsList.size(); i++){
+            //Jeśli nie spełnia równania
+            if(!limitsList.get(i).checkIfFulfilEquation(nodeVariables)){
+                int minParamIndex = getIndexFromNotConstrainedVariablesWithMinParam(i);
+                if(minParamIndex == -1){
+                    System.out.println("Node invisible");
+                    return;
+                }
+
+                //Get not integer variable with min param and adjust it with others.
+                nodeVariables[minParamIndex] = limitsList.get(i).getLimitResult();
+                for(int j = 0; j < limitsList.get(i).getLimitParameters().length; j++){
+                    if(j == minParamIndex)
+                        continue;
+                    nodeVariables[minParamIndex] -= nodeVariables[j] * limitsList.get(i).getLimitParameters()[j];
+                }
+            }
+        }
+    }
+
 
     //----------------WARUNKI ZAKOŃCZENIA PODZIAŁU---------------------
 
@@ -176,7 +232,7 @@ public class Node {
      *
      * @return False if there are not integer variables.
      */
-    private boolean isThereAnyNotIntegerVariables(){
+    public boolean isThereAnyNotIntegerVariables(){
         if(getNotIntegerVariableIndexes().size() == 0)
             return false;
         else
@@ -186,16 +242,4 @@ public class Node {
 
 }
 
-class CompareInt implements Comparator<Integer>
-{
-    @Override
-    public int compare(Integer o1, Integer o2) {
-        if(o1 > o2)
-            return 1;
-        else if(o1 < o2)
-            return -1;
-        else
-            return 0;
-    }
-}
 

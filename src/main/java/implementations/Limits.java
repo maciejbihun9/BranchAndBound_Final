@@ -10,14 +10,19 @@ public class Limits {
 
     //List holds variables indexes
     private static List<Integer> variablesWithConstraints = new ArrayList<>();
-
+    //private instance if this class
     private static final Limits limits = new Limits();
+    //List holds function limits
     private static final List<Limit> limitsList = new ArrayList<Limit>();
 
     private Limits(){
 
     }
 
+    /**
+     *
+     * @return Variables with constraints.
+     */
     public static List<Integer> getVariablesWithConstraints(){
         return variablesWithConstraints;
     }
@@ -26,18 +31,20 @@ public class Limits {
         return limits;
     }
 
+    /**
+     *
+     * @param limit Add function limit to limitList.
+     */
     public static void addLimit(Limit limit){
         limitsList.add(limit);
     }
 
+    /**
+     *
+     * @return Gets list with function limits
+     */
     public List<Limit> getLimitsList(){
         return limitsList;
-    }
-
-    public static void removeAllConstraints(){
-        for (int i = 0 ;i < variablesWithConstraints.size(); i++){
-            variablesWithConstraints.remove(i);
-        }
     }
 
     /**
@@ -50,13 +57,4 @@ public class Limits {
         variablesWithConstraints.add(variableIndex);
     }
 
-    //Check wether variable index already exist in list.
-    public static boolean checkVariableForConstrints(int variableIndex){
-        for(Integer variable : variablesWithConstraints){
-            if(variable == variableIndex){
-                return true;
-            }
-        }
-        return false;
-    }
 }
