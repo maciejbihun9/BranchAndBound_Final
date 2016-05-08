@@ -41,13 +41,13 @@ public class Main {
         int [] limitParams3 = {2,2, 0, 3 ,4, 3};
         Limit limit3 = new Limit(limitParams3, ">=", 25);*/
 
-        int [] limitParams = {2, 4};
+        Integer [] limitParams = {2, 4};
         Limit limit1 = new Limit(limitParams, "<=", 25);
 
-        int [] limitParams2 = {1, 0};
+        Integer [] limitParams2 = {1, 0};
         Limit limit2 = new Limit(limitParams2, "<=", 8);
 
-        int [] limitParams3 = {2, 0};
+        Integer [] limitParams3 = {2, 0};
         Limit limit3 = new Limit(limitParams3, "<=", 10);
 
         //Add limits to collection.

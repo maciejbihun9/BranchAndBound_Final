@@ -22,13 +22,13 @@ public class NodeTest {
 
         Parameters.setFunctionParameters(functionParameters);
 
-        int [] limitParams1 = {2, 3, 0, 0 ,4, 0};
+        Integer [] limitParams1 = {2, 3, 0, 0 ,4, 0};
         Limit limit1 = new Limit(limitParams1, ">", 24);
 
-        int [] limitParams2 = {4, 1 ,3,0, 5, 2};
+        Integer [] limitParams2 = {4, 1 ,3,0, 5, 2};
         Limit limit2 = new Limit(limitParams2, ">=", 150);
 
-        int [] limitParams3 = {2,2, 0, 3 ,4, 3};
+        Integer [] limitParams3 = {2,2, 0, 3 ,4, 3};
         Limit limit3 = new Limit(limitParams3, ">=", 25);
 
         //Add limits to collection.

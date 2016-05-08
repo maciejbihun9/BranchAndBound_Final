@@ -27,10 +27,10 @@ public class NodeTest2 {
         node = new Node(startingVariables);
 
         //Create couple limits
-        int [] limitParams1 = {2, 0, 2, 1 ,0, 1};
+        Integer [] limitParams1 = {2, 0, 2, 1 ,0, 1};
         Limit limit1 = new Limit(limitParams1, ">", 100);
 
-        int [] limitParams2 = {1, 5 ,3,2, 1, 0};
+        Integer [] limitParams2 = {1, 5 ,3,2, 1, 0};
         Limit limit2 = new Limit(limitParams2, "<=", 150);
 
         Limits.addLimit(limit1);

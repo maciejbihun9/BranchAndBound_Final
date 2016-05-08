@@ -11,7 +11,7 @@ public class LimitTest {
 
     //Enter function limits.
     //Length of the array must be the same as functionParameters.
-    int [] limitParams1 = {2, 3, 2, 0 ,1, 0, 1, 1};
+    Integer [] limitParams1 = {2, 3, 2, 0 ,1, 0, 1, 1};
 
 
     //Enter starting variables.

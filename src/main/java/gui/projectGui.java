@@ -1,8 +1,12 @@
 package gui;
 
+import implementations.Limit;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -17,7 +21,7 @@ public class projectGui  {
     private JLabel amount_of_variable_label;
     private JTextField amount_of_variables_field;
     private JButton amount_approve_btt;
-    private JTable variables_table;
+    private JTable function_table;
     private JTable limit_table;
     private JButton addLimitBtt;
     private JButton removeLimitBtt;
@@ -26,11 +30,17 @@ public class projectGui  {
     private JLabel variablesTableLabel;
     private JPanel panel1;
     private JLabel limitListLabel;
+    private JButton approve_limits;
 
 
     //Local Variables
+    private List<Object> functionParameters;
+    private List<Object> limitsList;
     private Executor executor;
     private int number_of_variables;
+    private Table limitTable;
+    private Table functionTable;
+    private int selectedRow;
 
 
     public projectGui(){
@@ -48,16 +58,106 @@ public class projectGui  {
                 addLimitToList();
             }
         });
+
+        approve_function_btt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                //Enable limit button.
+                addLimitBtt.setEnabled(true);
+
+                //Add columns to limit table.
+                limitTable = new Table(limit_table);
+
+                int equationSpace = 2;
+                int columnNumber = number_of_variables + equationSpace;
+
+                //Set limit table parameters.
+                limitTable.addColumns(columnNumber);
+                limitTable.setColumnTitle(columnNumber);
+
+                //Set function parameters from function_table
+                functionParameters = functionTable.getElementsFromRow(0, number_of_variables);
+                System.out.println(functionParameters);
+
+            }
+        });
+        removeLimitBtt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeLimitFromList(selectedRow);
+            }
+        });
+
+        limit_table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                 selectedRow = limit_table.getSelectedRow();
+            }
+        });
+        approve_limits.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                limitsList = new ArrayList<Object>();
+                int rows = limitTable.getTableModel().getRowCount();
+                int columns = limitTable.getTableModel().getColumnCount();
+                Integer[] parsedLimitArray;
+                System.out.println("LIczba wierszy : " + rows);
+                System.out.println("Liczba kolumn:" + columns);
+                Limit limit;
+
+                for (int i = 0; i < rows; i++) {
+                    Object [] limitParams = new Object[columns - 2];
+                    Object equationSign = null;
+                    Object result =  null;
+                    for (int j = 0; j < columns; j++) {
+                        if(j < limitParams.length){
+                            limitParams[j] = limit_table.getValueAt(i, j);
+                        } else if(j == columns - 2){
+                            equationSign = limit_table.getValueAt(i, j);
+                        } else if(j == columns - 1){
+                            result = limit_table.getValueAt(i, j);
+                            System.out.println("Result: " + result);
+                        }
+                    }
+                    //--------------------------
+                    //WYNIKI
+                    for (int j = 0; j < limitParams.length; j++) {
+                        System.out.println("Param:" + limitParams[i]);
+                    }
+                    System.out.println("Equation sign: " + equationSign);
+                    System.out.println("result : " + result);
+
+                    //Parse objects array to Integer array.
+                    Integer [] parsedObjects = new Integer [limitParams.length];
+                    for (int k = 0; k < limitParams.length; k++) {
+                        parsedObjects[k] = Integer.parseInt((String)limitParams[k]);
+                    }
+
+                    //Create new function limit and store it in limitList.
+                    limit = new Limit(parsedObjects, (String)equationSign, Integer.parseInt((String)result));
+                    limitsList.add(limit);
+                }
+
+            }
+        });
     }
 
     private void addLimitToList(){
-        Table limitTable = new Table(limit_table);
-        //limitTable.addColumns();
+        if(!removeLimitBtt.isEnabled()){
+            removeLimitBtt.setEnabled(true);
+        }
+        limitTable.addRow(new Object[]{});
+    }
+    private void removeLimitFromList(int whichRow){
+        limitTable.removeRow(whichRow);
     }
 
 
     private void setFunctionVariables(){
-        Table functionTable = new Table(variables_table);
+         functionTable = new Table(function_table);
         if(functionTable.getTableModel().getColumnCount() > 0){
             System.out.println("Column counter : " + functionTable.getTableModel().getColumnCount());
             functionTable.getTableModel().setColumnCount(0);

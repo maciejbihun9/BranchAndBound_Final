@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.Inflater;
 
 /**
  * Created by MaciekBihun on 2016-05-02.
@@ -11,16 +12,16 @@ import java.util.List;
 public class Limit {
 
     private String equationSign;
-    private int [] params;
+    private Integer [] params;
     private int result;
 
-    public Limit(int [] params, String equationSign, int result){
+    public Limit(Integer [] params, String equationSign, int result){
         this.params = params;
         this.equationSign = equationSign;
         this.result = result;
     }
 
-    public int [] getLimitParameters(){
+    public Integer [] getLimitParameters(){
         return params;
     }
 
