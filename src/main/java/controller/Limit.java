@@ -1,4 +1,4 @@
-package implementations;
+package controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import java.util.zip.Inflater;
 
 /**
  * Created by MaciekBihun on 2016-05-02.
+ * Class checks if function variables fulfil limit equation.
  */
 public class Limit {
 
@@ -21,10 +22,18 @@ public class Limit {
         this.result = result;
     }
 
+    /**
+     *
+     * @return Limit parameters entered by user.
+     */
     public Integer [] getLimitParameters(){
         return params;
     }
 
+    /**
+     *
+     * @return Limit result entered by user.
+     */
     public int getLimitResult(){
         return result;
     }
@@ -48,8 +57,11 @@ public class Limit {
         return index;
     }
 
-    //If there is more than one minimal parameter then
-    //return array with that parameters indexes.
+    /**
+     *
+     * @return List with indexes of parameters
+     * with minimum values.
+     */
     public Object [] getMinParamsIndexes(){
         int index = 0;
         int minValue = params[0];
@@ -69,8 +81,10 @@ public class Limit {
         return minParamIndexes.toArray();
     }
 
-    /*
-    Serve a int array and check weather matches equation input.
+    /**
+     *
+     * @param variables
+     * @return True if entered variables fulfil limit equation
      */
     public boolean checkIfFulfilEquation(double [] variables){
         double sum = 0;

@@ -1,4 +1,4 @@
-import implementations.Limit;
+import controller.Limit;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,11 +1,14 @@
-package gui;
+package view;
 
-import implementations.Limit;
+import controller.Table;
+import controller.Limit;
+import model.Limits;
+import model.Parameters;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -31,11 +34,13 @@ public class projectGui  {
     private JPanel panel1;
     private JLabel limitListLabel;
     private JButton approve_limits;
+    private JButton countButton;
+    private JPanel resultsPanel;
 
 
     //Local Variables
-    private List<Object> functionParameters;
-    private List<Object> limitsList;
+    private List<Integer> functionParameters;
+    private List<Limit> limitsList;
     private Executor executor;
     private int number_of_variables;
     private Table limitTable;
@@ -48,6 +53,7 @@ public class projectGui  {
         amount_approve_btt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                approve_function_btt.setEnabled(true);
                 setFunctionVariables();
             }
         });
@@ -55,6 +61,7 @@ public class projectGui  {
         addLimitBtt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                approve_limits.setEnabled(true);
                 addLimitToList();
             }
         });
@@ -100,7 +107,9 @@ public class projectGui  {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                limitsList = new ArrayList<Object>();
+                countButton.setEnabled(true);
+
+                limitsList = new ArrayList<Limit>();
                 int rows = limitTable.getTableModel().getRowCount();
                 int columns = limitTable.getTableModel().getColumnCount();
                 Integer[] parsedLimitArray;
@@ -143,6 +152,35 @@ public class projectGui  {
 
             }
         });
+        countButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayResultsInResultPanel();
+            }
+        });
+    }
+
+    private void displayResultsInResultPanel(){
+        //Display result of the calculations in labels
+        JLabel label = new JLabel("maciej");
+
+        //Repaint layout to display new components.
+        resultsPanel.add(label);
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
+
+        //Set layout to be vertical.
+        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+
+        /*//Set function parameters
+        Parameters.setFunctionParameters(functionParameters);
+
+        //Add function limits
+        for (int i = 0; i < limitsList.size(); i++) {
+            Limits.addLimit(limitsList.get(i));
+        }
+
+        resultsPanel.add(new Label("maciej"));*/
     }
 
     private void addLimitToList(){
@@ -151,13 +189,19 @@ public class projectGui  {
         }
         limitTable.addRow(new Object[]{});
     }
+
     private void removeLimitFromList(int whichRow){
         limitTable.removeRow(whichRow);
     }
 
 
+    /**
+     * Set functionTable parameters.
+     */
     private void setFunctionVariables(){
-         functionTable = new Table(function_table);
+        functionTable = new Table(function_table);
+
+        //Remove all columns from table if already exists.
         if(functionTable.getTableModel().getColumnCount() > 0){
             System.out.println("Column counter : " + functionTable.getTableModel().getColumnCount());
             functionTable.getTableModel().setColumnCount(0);
@@ -202,6 +246,11 @@ public class projectGui  {
 
 class Maths
 {
+    /**
+     *
+     * @param str
+     * @return True if specified String object is a Integer
+     */
     public static boolean isInteger(String str) {
         if (str == null) {
             return false;

@@ -1,4 +1,6 @@
-package implementations;
+package model;
+
+import controller.Limit;
 
 import java.util.ArrayList;
 import java.util.List;

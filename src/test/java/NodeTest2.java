@@ -1,7 +1,7 @@
-import implementations.Limit;
-import implementations.Limits;
-import implementations.Node;
-import implementations.Parameters;
+import controller.Limit;
+import model.Limits;
+import controller.Node;
+import model.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package gui;
+package controller;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -71,10 +71,10 @@ public class Table {
      * @param columnCount How many columns are there.
      * @return List with all elements from specified row.
      */
-    public List<Object> getElementsFromRow(int index,int columnCount){
-        List<Object> rowElements = new ArrayList<Object>();
+    public List<Integer> getElementsFromRow(int index,int columnCount){
+        List<Integer> rowElements = new ArrayList<Integer>();
         for (int i = 0; i < columnCount; i++) {
-            rowElements.add(tableModel.getValueAt(index, i));
+            rowElements.add(Integer.parseInt((String)tableModel.getValueAt(index, i)));
         }
         return rowElements;
     }

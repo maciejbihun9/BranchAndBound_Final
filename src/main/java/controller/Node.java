@@ -1,14 +1,15 @@
-package implementations;
+package controller;
+
+import controller.Limit;
+import model.Limits;
+import model.Parameters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by MaciekBihun on 2016-05-02.
+ * Class controls variables values after division.
  */
 public class Node {
 
@@ -95,7 +96,7 @@ public class Node {
             }
 
         }
-        for (int j = 0 ; j < Limits.getVariablesWithConstraints().size(); j++){
+        for (int j = 0; j < Limits.getVariablesWithConstraints().size(); j++){
             notIntegerVariableList.remove(Limits.getVariablesWithConstraints().get(j));
         }
         //System.out.println("Liczby nie całkowite:" + notIntegerVariableList);
@@ -131,6 +132,9 @@ public class Node {
 
     }
 
+    /**
+     * Set constraint on variable with param with the lowest value.
+     */
     public void setConstraintOnVariableWithMinParam(){
         int minParamIndex = getIndexOfVariableWithMinParam();
         if(!Limits.getVariablesWithConstraints().contains(minParamIndex))
@@ -196,6 +200,20 @@ public class Node {
 
     }
 
+    public void adjustVariables(){
+        List<Limit> limitsList = Limits.getInstance().getLimitsList();
+        for (int i = 0; i < limitsList.size(); i++) {
+            //Jeśli zmienne nie spełniają równania.
+            if(!limitsList.get(i).checkIfFulfilEquation(nodeVariables)){
+                System.out.println("Równanie nie spełnia założeń");
+                System.out.println("Wynik ograniczenia:" + limitsList.get(i).getLimitResult());
+            } else {
+                System.out.println("Założenia zostały spełnione!!");
+
+            }
+        }
+    }
+
 
     /**
      * If equation does not fulfil limits then adjust apprioprate variable
@@ -209,6 +227,7 @@ public class Node {
             //Jeśli nie spełnia równania
             if(!limitsList.get(i).checkIfFulfilEquation(nodeVariables)){
                 int minParamIndex = getIndexFromNotConstrainedVariablesWithMinParam(i);
+                System.out.println("not constrained variable");
                 if(minParamIndex == -1){
                     System.out.println("Node invisible");
                     return;
@@ -220,13 +239,12 @@ public class Node {
                     if(j == minParamIndex)
                         continue;
                     nodeVariables[minParamIndex] -= nodeVariables[j] * limitsList.get(i).getLimitParameters()[j];
+                    if(nodeVariables[minParamIndex] < 0)
+                        nodeVariables[minParamIndex] = 0;
                 }
             }
         }
     }
-
-
-    //----------------WARUNKI ZAKOŃCZENIA PODZIAŁU---------------------
 
     /**
      *
@@ -238,7 +256,6 @@ public class Node {
         else
             return true;
     }
-
 
 }
 

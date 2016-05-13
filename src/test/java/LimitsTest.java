@@ -1,12 +1,7 @@
-import implementations.Limits;
-import implementations.Node;
-import implementations.Parameters;
+import model.Limits;
+import controller.Node;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.Parameterized;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by MaciekBihun on 2016-05-03.
